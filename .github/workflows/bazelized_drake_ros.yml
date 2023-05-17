@@ -62,6 +62,9 @@ jobs:
           sudo apt-get install -y libconsole-bridge-dev
           sudo rm -rf /var/lib/apt/lists/*
       # CI for drake_ros.
+      - name: Install drake_ros's dependencies
+        run: yes | sudo ./setup/install_prereqs.sh
+        working-directory: drake_ros
       - name: Build drake_ros
         run: bazel build //...
         working-directory: drake_ros
