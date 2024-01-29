@@ -80,7 +80,7 @@ class RGBDSystem : public drake::systems::LeafSystem<double> {
       drake::systems::DiagramBuilder<double>* builder, DrakeRos* ros,
       const std::string& topic_name = "/image",
       const std::string& depth_topic_name = "/depth",
-      const rclcpp::QoS& qos = rclcpp::SystemDefaultsQoS(),
+      const rclcpp::QoS& qos = rclcpp::SensorDataQoS(),
       const std::unordered_set<drake::systems::TriggerType>& publish_triggers =
           RosPublisherSystem::kDefaultTriggerTypes,
       double publish_period = 0.0);

@@ -110,10 +110,7 @@ int do_main() {
   auto ros_interface_system = builder.AddSystem<RosInterfaceSystem>(
       std::make_unique<DrakeRos>("cart_pole"));
 
-  ClockSystem::AddToBuilder(&builder,
-                            ros_interface_system->get_ros_interface());
-
-  const double image_publish_period = 1. / 20;
+  const double image_publish_period = 1. / 20.0 ;
 
   auto camera_info_system = CameraInfoSystem::AddToBuilder(
       &builder, ros_interface_system->get_ros_interface(), "/color/camera_info",
@@ -122,10 +119,11 @@ int do_main() {
 
   auto depth_camera_info_system = CameraInfoSystem::AddToBuilder(
       &builder, ros_interface_system->get_ros_interface(),
-      "/depth/camera_info");
+      "/depth/camera_info", rclcpp::SystemDefaultsQoS(), {TriggerType::kPeriodic},
+      image_publish_period);
 
   const ColorRenderCamera color_camera{
-      {"renderer", {320, 240, M_PI_4}, {0.01, 10.0}, {}}, false};
+      {"renderer", {640, 480, M_PI_4}, {0.01, 10.0}, {}}, false};
   const DepthRenderCamera depth_camera{color_camera.core(), {0.01, 10.0}};
   const RigidTransformd X_WB =
       ParseCameraPose("0.8, 0.0, 0.7, -2.2, 0.0, 1.57");
@@ -154,7 +152,7 @@ int do_main() {
           "depth", image_publish_period, 0.);
   builder.Connect(camera->depth_image_32F_output_port(), depth_port);
 
-  const double viz_dt = 1 / 64.0;
+  const double viz_dt = 1 / 20.0;
   auto rviz_visualizer = builder.AddSystem<RvizVisualizer>(
       ros_interface_system->get_ros_interface(),
       drake_ros::viz::RvizVisualizerParams{
@@ -185,6 +183,13 @@ int do_main() {
 
   // Now the model is complete.
   cart_pole.Finalize();
+
+  ClockSystem::AddToBuilder(&builder,
+                            ros_interface_system->get_ros_interface(),
+                            "/clock",
+                            rclcpp::ClockQoS(),
+                            {TriggerType::kPeriodic},
+                            image_publish_period);
 
   auto diagram = builder.Build();
 

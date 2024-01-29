@@ -34,7 +34,12 @@ def generate_launch_description():
             package='rclcpp_components',
             executable='component_container',
             composable_node_descriptions=[
-                # Driver itself
+                launch_ros.descriptions.ComposableNode(
+                    package='drake_ros_examples',
+                    plugin='drake_ros_examples::SyncCamerasPointCloud',
+                    name='sync_cameras_point_cloud',
+                    extra_arguments=[{'use_intra_process_comms': True}]
+                ),
                 launch_ros.descriptions.ComposableNode(
                     package='depth_image_proc',
                     plugin='depth_image_proc::PointCloudXyzrgbNode',
@@ -46,7 +51,8 @@ def generate_launch_description():
                     parameters=[{'qos_overrides./color/image_raw.subscription.reliability':
                                  'best_effort',
                                  'qos_overrides./depth/image_raw.subscription.reliability':
-                                 'best_effort'}]
+                                 'best_effort'}],
+                    extra_arguments=[{'use_intra_process_comms': True}]
                 ),
             ],
             output='screen',
