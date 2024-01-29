@@ -38,7 +38,7 @@ class CameraInfoSystem : public drake::systems::LeafSystem<double> {
   static std::tuple<CameraInfoSystem*, RosPublisherSystem*> AddToBuilder(
       drake::systems::DiagramBuilder<double>* builder, DrakeRos* ros,
       const std::string& topic_name = "/image/camera_info",
-      const rclcpp::QoS& qos = rclcpp::SystemDefaultsQoS(),
+      const rclcpp::QoS& qos = rclcpp::SensorDataQoS(),
       const std::unordered_set<drake::systems::TriggerType>& publish_triggers =
           RosPublisherSystem::kDefaultTriggerTypes,
       double publish_period = 0.0);

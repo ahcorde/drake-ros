@@ -42,3 +42,9 @@ Or use ROS 2 Launch:
 ```bash
 ros2 launch drake_ros_examples rgba_launch.py
 ```
+
+**Note***: If you restart the simulation but not RViz, you should click RViz's
+"Reset" button so that TF does not get tripped up on stale data.
+
+**Note**: All terminals should have their environment setup appropriately. See
+`drake_ros_examples` for an example of how to do so.

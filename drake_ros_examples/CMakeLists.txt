@@ -14,13 +14,28 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(ament_index_cpp REQUIRED)
 find_package(drake REQUIRED)
 find_package(drake_ros REQUIRED)
+find_package(image_transport REQUIRED)
 find_package(gflags REQUIRED COMPONENTS shared)
+find_package(message_filters REQUIRED COMPONENTS shared)
+find_package(sensor_msgs REQUIRED COMPONENTS shared)
 
 add_subdirectory(examples/hydroelastic)
 add_subdirectory(examples/iiwa_manipulator)
 add_subdirectory(examples/multirobot)
 add_subdirectory(examples/rgbd)
 add_subdirectory(examples/rs_flip_flop)
+
+rclcpp_components_register_node(
+  sync_cameras_pointcloud
+  PLUGIN "drake_ros_examples::SyncCamerasPointCloud"
+  EXECUTABLE standalone_sync_cameras_pointcloud)
+
+install(TARGETS
+  sync_cameras_pointcloud
+
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 if(BUILD_TESTING)
   find_package(ament_cmake_clang_format REQUIRED)

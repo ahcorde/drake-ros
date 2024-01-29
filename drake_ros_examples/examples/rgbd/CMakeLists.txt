@@ -7,6 +7,22 @@ target_link_libraries(rgbd
   gflags_shared
 )
 
+# sync_cameras_pointcloud
+add_library(sync_cameras_pointcloud SHARED
+  SyncCamerasPointCloud.cpp
+)
+target_link_options(sync_cameras_pointcloud PRIVATE "-Wl,--no-undefined")
+target_link_libraries(sync_cameras_pointcloud
+  image_transport::image_transport
+  message_filters::message_filters
+  rclcpp::rclcpp
+  rclcpp_components::component
+  ${sensor_msgs_TARGETS}
+)
+target_include_directories(sync_cameras_pointcloud PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+
 install(
   TARGETS
   rgbd
